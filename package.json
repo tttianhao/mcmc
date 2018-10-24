@@ -70,5 +70,10 @@
   "jest": {
     "testEnvironment": "node"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "ajv": "^6.5.4",
+    "command-line-args": "^5.0.2",
+    "jsnetworkx": "^0.3.4"
+  }
 }
