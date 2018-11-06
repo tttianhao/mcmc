@@ -2,7 +2,7 @@
 
 const assert = require('assert');
 const jsnx = require('jsnetworkx');
-const mcmc = require('../index.js');
+const mcmc = require('../lib/index.js');
 
 describe('mcmc', () => {
   it('Find distance?', () => {
