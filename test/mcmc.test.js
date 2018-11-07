@@ -1,5 +1,6 @@
 /* eslint-env mocha */
 /* eslint capitalized-comments: 0 */
+/* eslint guard-for-in:0 */
 
 const assert = require('assert');
 const jsnx = require('jsnetworkx');
@@ -200,8 +201,14 @@ describe('mcmc', () => {
 
   it('does main function works?', () => {
     var inputValue = mcmc.setDefault({});
-    inputValue.iterate = 100;
-    mcmc.markovChain(inputValue);
+    inputValue.iterate = 50;
+    inputValue.T = 300;
+    var history = mcmc.markovChain(inputValue);
+    var total = 0;
+    for (var key in history) {
+      total += history[key];
+    }
+    assert.equal(total, 51);
   });
 
   it('does it computes the shortest path?', () => {
@@ -212,5 +219,14 @@ describe('mcmc', () => {
     };
     var expected = (30 + 25 + 10) / 17;
     assert.equal(mcmc.shortestPath(history, 0), expected);
+  });
+
+  it('does it sort an object in decending order by value?', () => {
+    var history = {
+      '0,1,1,1,1,0,2,0,1,2,0,2,1,0,1,0': 10,
+      '0,1,1,0,1,0,2,0,1,2,0,2,0,0,2,0': 5,
+      '0,4,1,1,4,0,2,0,1,2,0,2,1,0,2,0': 2
+    };
+    assert.equal(mcmc.probable(history)[0], '0,1,1,1,1,0,2,0,1,2,0,2,1,0,1,0');
   });
 });
