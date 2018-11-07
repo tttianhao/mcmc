@@ -1,3 +1,4 @@
+/* eslint-env mocha */
 /* eslint capitalized-comments: 0 */
 
 const assert = require('assert');
@@ -85,13 +86,13 @@ describe('mcmc', () => {
     var G = new jsnx.Graph();
     G.addNodesFrom([0, 1, 2, 3], { coordinate: [1, 2] });
     G.addWeightedEdgesFrom([[0, 1, 1], [0, 2, 2], [0, 3, 3]]);
-    for (var i = 0; i < 1000; i++) {
+    for (var i = 0; i < 100; i++) {
       assert(mcmc.addOrDelete(G));
     }
     var Gfull = new jsnx.Graph();
     G.addNodesFrom([0, 1, 2], { coordinate: [1, 0] });
     G.addWeightedEdgesFrom([[0, 1, 1], [0, 2, 2], [1, 2, 3]]);
-    for (var j = 0; j < 1000; j++) {
+    for (var j = 0; j < 100; j++) {
       assert(!mcmc.addOrDelete(Gfull));
     }
   });
