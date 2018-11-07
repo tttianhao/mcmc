@@ -48,7 +48,8 @@ $ node lib/index.js
 * --r: the r facotr in theta equation. Default is 1
 * --number: the number of nodes. Default is 4
 * --coordinate: the coordinate of nodes. Input format: x_1,y_1,x_2,y_2,x_3,y_3.... Default is 0,0,1,1,-1,1,1,-1
-* --N: the number of iterations. Default is 1000
+* --iterate: the number of iterations. Default is 1000
+* --center: the source node. Default is node 0
 
 ## License
 

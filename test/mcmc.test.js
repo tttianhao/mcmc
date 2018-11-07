@@ -59,8 +59,8 @@ describe('mcmc', () => {
   it('set default correct?', () => {
     var inputValue = mcmc.setDefault({});
     assert.equal(inputValue.r, 1);
-    assert.equal(inputValue.t, 200);
-    assert.equal(inputValue.number, 5);
+    assert.equal(inputValue.t, 100);
+    assert.equal(inputValue.number, 4);
   });
 
   it('Is it a bridge?', () => {
@@ -158,11 +158,11 @@ describe('mcmc', () => {
     var G1 = mcmc.initialGraph(4, [[0, 0], [1, 0], [1, 1], [0, 1]]);
     G1.addWeightedEdgesFrom([[0, 2, Math.sqrt(2)]]);
     assert.equal(
-      mcmc.piRatio(G, G1, [10, 300], 0),
+      mcmc.piRatio(G, G1, 10, 300, 0),
       Math.exp((2 - 11 * Math.sqrt(2)) / 300)
     );
     assert.equal(
-      mcmc.piRatio(G1, G, [10, 300], 0),
+      mcmc.piRatio(G1, G, 10, 300, 0),
       Math.exp((11 * Math.sqrt(2) - 2) / 300)
     );
   });
@@ -172,10 +172,10 @@ describe('mcmc', () => {
     var G1 = mcmc.initialGraph(4, [[0, 0], [1, 0], [1, 1], [0, 1]]);
     G1.addWeightedEdgesFrom([[0, 2, Math.sqrt(2)]]);
     assert.equal(
-      mcmc.acceptanceRatio(G, G1, [10, 300], 0),
+      mcmc.acceptanceRatio(G, G1, 10, 300, 0),
       (Math.exp((2 - 11 * Math.sqrt(2)) / 300) * 0.2) / 0.5
     );
-    assert.equal(mcmc.acceptanceRatio(G1, G, [10, 300], 0), 1);
+    assert.equal(mcmc.acceptanceRatio(G1, G, 10, 300, 0), 1);
   });
 
   it('does it computes expected number of edges?', () => {
@@ -199,7 +199,9 @@ describe('mcmc', () => {
   });
 
   it('does main function works?', () => {
-    mcmc.markovChain({}, 10);
+    var inputValue = mcmc.setDefault({});
+    inputValue.iterate = 100;
+    mcmc.markovChain(inputValue);
   });
 
   it('does it computes the shortest path?', () => {
