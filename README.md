@@ -5,29 +5,29 @@
 
 This project is an implementation of Metropolis-Hastings algorithm to find the most probable graphs based on user input. User can specify the number of nodes, the coordination of the nodes, the source node, r, t factors and the number of iterations. The relative probability of the graphs are given by the following function:
 
-$$ f ( \{ s_i , X_i \}, \{s_j , X_j\}) = e^{-(\theta(s_j,X_j) - \theta(s_i,X_i))/T} $$
+![](http://latex.codecogs.com/gif.latex?f%20%28%20%5C%7B%20s_i%20%2C%20X_i%20%5C%7D%2C%20%5C%7Bs_j%20%2C%20X_j%5C%7D%29%20%3D%20e%5E%7B-%28%5Ctheta%28s_j%2CX_j%29%20-%20%5Ctheta%28s_i%2CX_i%29%29/T%7D)
 
 where,
 
-$$\theta(s_i,X_i) = r\sum_e w_e+\sum_k^M \sum_{e \in p_{s_i k}} w_e$$
+![](http://latex.codecogs.com/gif.latex?%5Ctheta%28s_i%2CX_i%29%20%3D%20r%5Csum_e%20w_e&plus;%5Csum_k%5EM%20%5Csum_%7Be%20%5Cin%20p_%7Bs_i%20k%7D%7D%20w_e)
 
-In this equation, the first sum is the total weight of the graph (weight of an edge is the distance between the two nodes). The second sum is the total weight of source node to other nodes.
+In this equation, the first sum is the total weight of the graph (weight of an edge is the distance between the two nodes). The second sum is the total weight of source node to other nodes.
 
 The proposal distribution is defined such that in case of adding an edge:
 
-$$q(j|i) = \frac{1}{\frac{M(M-1)}{2}-E}$$
+![](http://latex.codecogs.com/gif.latex?q%28j%7Ci%29%20%3D%20%5Cfrac%7B1%7D%7B%5Cfrac%7BM%28M-1%29%7D%7B2%7D-E%7D)
 
 where the M is the number of nodes and the M term is the maximum number of edges. E is the number of edges in current state.
 
 In case of deleting an edge:
 
-$$q(j|i) = \frac{1}{E -B}$$
+![](http://latex.codecogs.com/gif.latex?q%28j%7Ci%29%20%3D%20%5Cfrac%7B1%7D%7BE%20-B%7D)
 
 where B is the number of bridge. Bridge is an edge which will make the graph disconnected if being deleted.
 
 The acceptance rate is defined as following:
 
-$$A = min\{ 1, \frac{\pi (x_j) q(x_i|x_j)}{\pi (x_i)q(x_j|x_i)} \}$$
+![](http://latex.codecogs.com/gif.latex?A%20%3D%20min%5C%7B%201%2C%20%5Cfrac%7B%5Cpi%20%28x_j%29%20q%28x_i%7Cx_j%29%7D%7B%5Cpi%20%28x_i%29q%28x_j%7Cx_i%29%7D%20%5C%7D)
 
 ## Installation
 
@@ -47,7 +47,7 @@ $ node lib/index.js
 * --t: the T factor in relative probability equation. Default is 100
 * --r: the r facotr in theta equation. Default is 1
 * --number: the number of nodes. Default is 4
-* --coordinate: the coordinate of nodes. Input format: $x_1,y_1,x_2,y_2,x_3,y_3...$. Default is $0,0,1,1,-1,1,1,-1$
+* --coordinate: the coordinate of nodes. Input format: x_1,y_1,x_2,y_2,x_3,y_3.... Default is 0,0,1,1,-1,1,1,-1
 * --N: the number of iterations. Default is 1000
 
 ## License
