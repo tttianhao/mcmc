@@ -4,3 +4,5 @@ node_js:
   - v8
 #script: make test-coveralls
 after_script: cat ./coverage/lcov.info | coveralls
+after_success:
+- npm run coveralls
