@@ -50,17 +50,20 @@ describe('mcmc', () => {
   });
 
   it('should be equal?', () => {
-    var m1 = [[1, 2, 3], [3, 4, 5], [5, 6, 7]];
-    var m2 = [[1, 2, 3], [3, 4, 5], [5, 6, 7]];
+    var m1 = [[1, 2], [3, 4], [5, 6]];
+    var m2 = [[1, 2], [3, 4], [5, 6]];
     assert(mcmc.isEqual(m1, m2));
-    m2[1][2] = 100;
+    m2[1][1] = 100;
     assert(!mcmc.isEqual(m1, m2));
+    var G1 = mcmc.initialGraph(3, [[0, 0], [1, 1], [0, 1]]);
+    var G2 = mcmc.initialGraph(3, [[0, 0], [1, 1], [0, 1]]);
+    assert(mcmc.isEqual(G1.edges(), G2.edges()));
   });
 
   it('set default correct?', () => {
     var inputValue = mcmc.setDefault({});
     assert.equal(inputValue.r, 1);
-    assert.equal(inputValue.t, 100);
+    assert.equal(inputValue.t, 1);
     assert.equal(inputValue.number, 4);
   });
 
@@ -83,21 +86,6 @@ describe('mcmc', () => {
     assert(!mcmc.isBridge(G, 2, 0));
   });
 
-  it('Does it choose add or delete properly?', () => {
-    var G = new jsnx.Graph();
-    G.addNodesFrom([0, 1, 2, 3], { coordinate: [1, 2] });
-    G.addWeightedEdgesFrom([[0, 1, 1], [0, 2, 2], [0, 3, 3]]);
-    for (var i = 0; i < 100; i++) {
-      assert(mcmc.addOrDelete(G));
-    }
-    var Gfull = new jsnx.Graph();
-    G.addNodesFrom([0, 1, 2], { coordinate: [1, 0] });
-    G.addWeightedEdgesFrom([[0, 1, 1], [0, 2, 2], [1, 2, 3]]);
-    for (var j = 0; j < 100; j++) {
-      assert(!mcmc.addOrDelete(Gfull));
-    }
-  });
-
   it('Does it creates an initial graph?', () => {
     var G = mcmc.initialGraph(3, [[0, 0], [1, 1], [0, 1]]);
     assert.equal(G.nodes().length, 3);
@@ -110,11 +98,22 @@ describe('mcmc', () => {
     assert.equal(theta, 44);
   });
 
-  it('does it finds edge between two nodes?', () => {
-    var G = mcmc.initialGraph(4, [[0, 0], [1, 0], [1, 1], [0, 1]]);
-    assert(mcmc.isEdgeBetween(G, 0, 1));
-    assert(mcmc.isEdgeBetween(G, 2, 1));
-    assert(!mcmc.isEdgeBetween(G, 1, 3));
+  it('log history?', () => {
+    var Xi = mcmc.initialGraph(3, [[0, 0], [1, 1], [1, 0]]);
+    var history = new Map();
+    history.set([1, 2], 2);
+    mcmc.logHistory(Xi, history);
+    history.forEach((value, key) => {
+      if (mcmc.isEqual(key, Xi.edges())) {
+        assert.equal(value, 1);
+      }
+    });
+    mcmc.logHistory(Xi, history);
+    history.forEach((value, key) => {
+      if (mcmc.isEqual(key, Xi.edges())) {
+        assert.equal(value, 2);
+      }
+    });
   });
 
   it('does it adds a random edge?', () => {
@@ -123,8 +122,8 @@ describe('mcmc', () => {
     assert.equal(G.edges().length, 5);
     mcmc.addRandomEdge(G);
     assert.equal(G.edges().length, 6);
-    assert(mcmc.isEdgeBetween(G, 1, 3));
-    assert(mcmc.isEdgeBetween(G, 0, 2));
+    assert(G.neighbors(1).includes(3));
+    assert(G.neighbors(0).includes(2));
   });
 
   it('does it delete a random edges?', () => {
@@ -172,11 +171,13 @@ describe('mcmc', () => {
     var G = mcmc.initialGraph(4, [[0, 0], [1, 0], [1, 1], [0, 1]]);
     var G1 = mcmc.initialGraph(4, [[0, 0], [1, 0], [1, 1], [0, 1]]);
     G1.addWeightedEdgesFrom([[0, 2, Math.sqrt(2)]]);
-    assert.equal(
-      mcmc.acceptanceRatio(G, G1, 10, 300, 0),
-      (Math.exp((2 - 11 * Math.sqrt(2)) / 300) * 0.2) / 0.5
-    );
-    assert.equal(mcmc.acceptanceRatio(G1, G, 10, 300, 0), 1);
+    G1 = mcmc.copyGraph(mcmc.acceptReject(G1, G, 10, 300, 0), [
+      [0, 0],
+      [1, 0],
+      [1, 1],
+      [0, 1]
+    ]);
+    assert(mcmc.isEqual(G1.edges(), G.edges()));
   });
 
   it('does it computes expected number of edges?', () => {
@@ -228,5 +229,16 @@ describe('mcmc', () => {
       '0,4,1,1,4,0,2,0,1,2,0,2,1,0,2,0': 2
     };
     assert.equal(mcmc.probable(history)[0], '0,1,1,1,1,0,2,0,1,2,0,2,1,0,1,0');
+  });
+
+  it('convert edges to graph?', () => {
+    var edges = [[0, 1], [0, 2], [0, 3]];
+    var coordinate = [[0, 0], [0, 1], [1, 1], [0, 1]];
+    var G = mcmc.toGraph(edges, coordinate);
+    console.log(G.nodes());
+    console.log(G.edges(true));
+    assert.equal(G.edges().length, 3);
+    assert.equal(G.nodes().length, 4);
+    assert.equal(G.adj.get(0).get(1).weight, 1);
   });
 });
