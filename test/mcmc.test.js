@@ -180,63 +180,10 @@ describe('mcmc', () => {
     assert(mcmc.isEqual(G1.edges(), G.edges()));
   });
 
-  it('does it computes expected number of edges?', () => {
-    var history = {
-      '0,1,1,1,1,0,0,0,1,0,0,0,1,0,0,0': 10,
-      '0,1,1,1,0,0,0,0,1,0,0,0,0,0,0,0': 5,
-      '0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0': 2
-    };
-    var expected = (3 * 10 + 2 * 5 + 1 * 2) / 17;
-    assert.equal(mcmc.expectedEdge(history), expected);
-  });
-
-  it('does it computes expected number of edges connected with source node?', () => {
-    var history = {
-      '0,1,1,1,1,0,0,0,1,0,0,0,1,0,0,0': 10,
-      '0,1,1,1,0,0,0,0,1,0,0,0,0,0,0,0': 5,
-      '0,1,1,0,0,0,0,0,0,0,0,0,0,0,0,0': 2
-    };
-    var expected = (3 * 10 + 3 * 5 + 2 * 2) / 17;
-    assert.equal(mcmc.sourceEdge(history), expected);
-  });
-
-  it('does main function works?', () => {
-    var inputValue = mcmc.setDefault({});
-    inputValue.iterate = 50;
-    inputValue.T = 300;
-    var history = mcmc.markovChain(inputValue);
-    var total = 0;
-    for (var key in history) {
-      total += history[key];
-    }
-    assert.equal(total, 51);
-  });
-
-  it('does it computes the shortest path?', () => {
-    var history = {
-      '0,1,1,1,1,0,2,0,1,2,0,2,1,0,1,0': 10,
-      '0,1,1,0,1,0,2,0,1,2,0,2,0,0,2,0': 5,
-      '0,4,1,1,4,0,2,0,1,2,0,2,1,0,2,0': 2
-    };
-    var expected = (30 + 25 + 10) / 17;
-    assert.equal(mcmc.shortestPath(history, 0), expected);
-  });
-
-  it('does it sort an object in decending order by value?', () => {
-    var history = {
-      '0,1,1,1,1,0,2,0,1,2,0,2,1,0,1,0': 10,
-      '0,1,1,0,1,0,2,0,1,2,0,2,0,0,2,0': 5,
-      '0,4,1,1,4,0,2,0,1,2,0,2,1,0,2,0': 2
-    };
-    assert.equal(mcmc.probable(history)[0], '0,1,1,1,1,0,2,0,1,2,0,2,1,0,1,0');
-  });
-
   it('convert edges to graph?', () => {
     var edges = [[0, 1], [0, 2], [0, 3]];
     var coordinate = [[0, 0], [0, 1], [1, 1], [0, 1]];
     var G = mcmc.toGraph(edges, coordinate);
-    console.log(G.nodes());
-    console.log(G.edges(true));
     assert.equal(G.edges().length, 3);
     assert.equal(G.nodes().length, 4);
     assert.equal(G.adj.get(0).get(1).weight, 1);
