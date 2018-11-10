@@ -167,7 +167,7 @@ describe('mcmc', () => {
     );
   });
 
-  it('does it computes acceptance ratio correctly?', () => {
+  it('does it computes whether accept or reject correctly?', () => {
     var G = mcmc.initialGraph(4, [[0, 0], [1, 0], [1, 1], [0, 1]]);
     var G1 = mcmc.initialGraph(4, [[0, 0], [1, 0], [1, 1], [0, 1]]);
     G1.addWeightedEdgesFrom([[0, 2, Math.sqrt(2)]]);
@@ -188,4 +188,6 @@ describe('mcmc', () => {
     assert.equal(G.nodes().length, 4);
     assert.equal(G.adj.get(0).get(1).weight, 1);
   });
+
+  // markovChain, expectetEdge, shorPath, convert, topGraph
 });
