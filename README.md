@@ -53,8 +53,6 @@ $ node lib/index.js
 
 --------
 
-Note: The run time of the program increase greatly with the increase number of nodes and iteration times. Please be patient. (Just to give an idea, 6 node 5000 iteration takes about 7 minutes)
-
 ## License
 
 MIT © [Tianhao Yu]()

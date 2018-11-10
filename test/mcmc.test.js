@@ -214,5 +214,32 @@ describe('mcmc', () => {
     assert.equal(expected[1], 2.5);
     assert.equal(expected[2], 4);
   });
-  //  shorPath, convert, topGraph
+
+  it('convert coordiantions from string to array?', () => {
+    var input = '0,0,1,1,1,-1,-1,-1,-1,1';
+    var coor = mcmc.convert(input);
+    var expected = [[0, 0], [1, 1], [1, -1], [-1, -1], [-1, 1]];
+    assert(mcmc.isEqual(coor, expected));
+  });
+
+  it('calculates the sum of shortest path from another node to node 0', () => {
+    var history = new Map();
+    history.set([[0, 1], [0, 2], [0, 3]], 100);
+    history.set([[0, 1], [1, 2], [1, 3]], 50);
+    history.set([[0, 2], [1, 2], [0, 3], [1, 2]], 50);
+    history.set([[0, 1], [0, 2], [0, 3], [1, 2], [1, 3], [2, 3]], 100);
+    var coordinate = [[0, 0], [1, 0], [1, 1], [0, 1]];
+    var path = mcmc.shortPath(history, coordinate);
+    assert.equal(path, 700 + 350 * Math.sqrt(2));
+  });
+
+  it('report top 1% graph', () => {
+    var history = new Map();
+    history.set([[0, 1], [0, 2], [0, 3]], 100);
+    history.set([[0, 1], [1, 2], [1, 3]], 50);
+    history.set([[0, 2], [1, 2], [0, 3], [1, 2]], 50);
+    history.set([[0, 1], [0, 2], [0, 3], [1, 2], [1, 3], [2, 3]], 100);
+    var coordinate = [[0, 0], [1, 0], [1, 1], [0, 1]];
+    mcmc.topGraph(history, 4, coordinate);
+  });
 });
