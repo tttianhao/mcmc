@@ -189,5 +189,30 @@ describe('mcmc', () => {
     assert.equal(G.adj.get(0).get(1).weight, 1);
   });
 
-  // markovChain, expectetEdge, shorPath, convert, topGraph
+  it('does mcmc correctly explore different states?', () => {
+    var options = mcmc.setDefault({});
+    options.iterate = 200;
+    options.t = 300;
+    var history = mcmc.markovChain(options);
+    var sum = 0;
+    history.forEach((value, key) => {
+      sum += value;
+      var G = mcmc.toGraph(key, options.coordinate);
+      assert(mcmc.isConnected(G));
+    });
+    assert.equal(sum, 201);
+  });
+
+  it('calculates expected edges correctly?', () => {
+    var history = new Map();
+    history.set([[0, 1], [0, 2], [0, 3]], 100);
+    history.set([[0, 1], [1, 2], [1, 3]], 50);
+    history.set([[0, 2], [1, 2], [0, 3], [1, 2]], 50);
+    history.set([[0, 1], [0, 2], [0, 3], [1, 2], [1, 3], [2, 3]], 100);
+    var expected = mcmc.expectedEdge(history);
+    assert.equal(expected[0], 1250 / 300);
+    assert.equal(expected[1], 2.5);
+    assert.equal(expected[2], 4);
+  });
+  //  shorPath, convert, topGraph
 });
