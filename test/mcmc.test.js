@@ -157,21 +157,23 @@ describe('mcmc', () => {
     var G = mcmc.initialGraph(4, [[0, 0], [1, 0], [1, 1], [0, 1]]);
     var G1 = mcmc.initialGraph(4, [[0, 0], [1, 0], [1, 1], [0, 1]]);
     G1.addWeightedEdgesFrom([[0, 2, Math.sqrt(2)]]);
-    assert.equal(
-      mcmc.piRatio(G, G1, 10, 300, 0),
-      Math.exp((2 - 11 * Math.sqrt(2)) / 300)
-    );
-    assert.equal(
-      mcmc.piRatio(G1, G, 10, 300, 0),
-      Math.exp((11 * Math.sqrt(2) - 2) / 300)
-    );
+    var options = {};
+    options.r = 10;
+    options.t = 300;
+    options.number = 0;
+    assert.equal(mcmc.piRatio(G, G1, options), Math.exp((2 - 11 * Math.sqrt(2)) / 300));
+    assert.equal(mcmc.piRatio(G1, G, options), Math.exp((11 * Math.sqrt(2) - 2) / 300));
   });
 
   it('does it computes whether accept or reject correctly?', () => {
     var G = mcmc.initialGraph(4, [[0, 0], [1, 0], [1, 1], [0, 1]]);
     var G1 = mcmc.initialGraph(4, [[0, 0], [1, 0], [1, 1], [0, 1]]);
     G1.addWeightedEdgesFrom([[0, 2, Math.sqrt(2)]]);
-    G1 = mcmc.copyGraph(mcmc.acceptReject(G1, G, 10, 300, 0), [
+    var options = {};
+    options.r = 10;
+    options.t = 300;
+    options.number = 0;
+    G1 = mcmc.copyGraph(mcmc.acceptReject(G1, G, options), [
       [0, 0],
       [1, 0],
       [1, 1],
